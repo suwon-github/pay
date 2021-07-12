@@ -52,150 +52,150 @@
 각 서비스 내에 도출된 핵심 어그리게잇 객체를 엔티티로 선언했다. 이때 가능한 현업에서 사용하는 유비쿼터스 랭귀지를 사용하려 노력했다.
 
 
-package skhappydelivery;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.PostPersist;
-import javax.persistence.PostUpdate;
-import javax.persistence.Table;
-
-import org.springframework.beans.BeanUtils;
-
-@Entity
-@Table(name="Order_table")
-public class Order {
-
-   @Id
-   @GeneratedValue(strategy=GenerationType.AUTO)
-   private Long orderId;
-   private Long customerId;
-   private String customerName;
-   private String customerAddress;
-   private Integer phoneNumber;
-   private Long menuId;
-   private Integer menuCount;
-   private Integer menuPrice;
-   private Long storeId;
-   private String orderStatus;  
-
-    
-   @PostPersist
-   public void onPostPersist(){
-
-   skhappydelivery.external.Payed Payed = new skhappydelivery.external.Payed();
-   // mappings goes here
-
-   Payed.setCustomerId(this.customerId);
-   Payed.setOrderId(this.orderId);
-   Payed.setStoreId(this.storeId);
-   Payed.setTotalPrice(this.menuCount * this.menuPrice);
-
-   OrderApplication.applicationContext.getBean(skhappydelivery.external.PayService.class)
-       .payed(Payed);
-   }
-
-
-@PostUpdate
-    public void onPostUpdate(){
-        OrderCanceled orderCanceled = new OrderCanceled();
-
-//Reject >>> publish
-if(this.orderStatus=="orderCanceled"){
-
-BeanUtils.copyProperties(this, orderCanceled);
-
-orderCanceled.setOrderStatus(this.orderStatus);
-			
-System.out.println(" PUBLISH orderCanceledOBJ:  " +orderCanceled.toString());
-			
-orderCanceled.publishAfterCommit();
+	package skhappydelivery;
 	
-}
+	import javax.persistence.Entity;
+	import javax.persistence.GeneratedValue;
+	import javax.persistence.GenerationType;
+	import javax.persistence.Id;
+	import javax.persistence.PostPersist;
+	import javax.persistence.PostUpdate;
+	import javax.persistence.Table;
+	
+	import org.springframework.beans.BeanUtils;
+	
+	@Entity
+	@Table(name="Order_table")
+	public class Order {
+	
+    	@Id
+    	@GeneratedValue(strategy=GenerationType.AUTO)
+    	private Long orderId;
+    	private Long customerId;
+    	private String customerName;
+    	private String customerAddress;
+    	private Integer phoneNumber;
+    	private Long menuId;
+    	private Integer menuCount;
+    	private Integer menuPrice;
+    	private Long storeId;
+    	private String orderStatus;  
+	
+    	
+    	@PostPersist
+    	public void onPostPersist(){
+	
+   	     skhappydelivery.external.Payed Payed = new skhappydelivery.external.Payed();
+   	     // mappings goes here
 
-  }
+ 	       Payed.setCustomerId(this.customerId);
+ 	       Payed.setOrderId(this.orderId);
+  	      Payed.setStoreId(this.storeId);
+  	      Payed.setTotalPrice(this.menuCount * this.menuPrice);
 
-}
+ 	       OrderApplication.applicationContext.getBean(skhappydelivery.external.PayService.class)
+ 	           .payed(Payed);
+ 	   }
+
+
+	@PostUpdate
+ 	   public void onPostUpdate(){
+  	      OrderCanceled orderCanceled = new OrderCanceled();
+	
+			        //Reject >>> publish
+					if(this.orderStatus=="orderCanceled"){
+
+						BeanUtils.copyProperties(this, orderCanceled);
+
+						orderCanceled.setOrderStatus(this.orderStatus);
+			
+						System.out.println(" PUBLISH orderCanceledOBJ:  " +orderCanceled.toString());
+				
+						orderCanceled.publishAfterCommit();
+		
+					}
+	
+    	}
+	
+	}
 
 - Entity Pattern 과 Repository Pattern 을 적용하여 JPA 를 통하여 다양한 데이터소스 유형 (RDB or NoSQL) 에 대한 
 별도의 처리가 없도록 데이터 접근 어댑터를 자동 생성하기 위하여 Spring Data REST 의 RestRepository 를 적용하였다
 
-OrderRepository.java
+	OrderRepository.java
 
-package skhappydelivery;
-
-import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
-
-@RepositoryRestResource(collectionResourceRel="orders", path="orders")
-public interface OrderRepository extends PagingAndSortingRepository<Order, Long>{
-
-
-}
+	package skhappydelivery;
+	
+	import org.springframework.data.repository.PagingAndSortingRepository;
+	import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+	
+	@RepositoryRestResource(collectionResourceRel="orders", path="orders")
+	public interface OrderRepository extends PagingAndSortingRepository<Order, Long>{
+	
+	
+	}
 
 
 #### kafka 활용한 Pub/Sub 구조
 
-package skhappydelivery;
-
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.stream.annotation.StreamListener;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.stereotype.Service;
-
-import skhappydelivery.config.kafka.KafkaProcessor;
-
-@Service
-public class PolicyHandler{
-   @Autowired 
-   private PayRepository payRepository;
+	package skhappydelivery;
 	
-   @Autowired
-   private PayService payService;
-
-   @StreamListener(KafkaProcessor.INPUT)
-   public void wheneverOrderCanceled_PayCancel(@Payload OrderCanceled orderCanceled){
-
-   if(!orderCanceled.validate()) return;
-        
-   System.out.println("\n\n##### listener PayCancel : " + orderCanceled.toString() + "\n\n");
-
-   try {
-	Optional<Pay> tempObj =  payRepository.findById(orderCanceled.getOrderId());
-
-	Pay payObj = new Pay();
-
-	if(tempObj.isPresent()){
-		payObj = tempObj.get();		
-	}else{
-		System.out.println("NO PAY data" );
-	}
-
-		payObj.setPayStatus("ORDERCANCELLED");
-
-		payRepository.save(payObj);
-
-		System.out.println(" PAYLIST data all :  " + payRepository.findAll().toString());
-
-		System.out.println("ORDERCANCELLED SUCCESS");
-			
-	} catch (Exception e) {
-
-           System.out.println("\n\n##### listener PayCancel ERROR \n\n");
+	import java.util.Optional;
+	
+	import org.springframework.beans.factory.annotation.Autowired;
+	import org.springframework.cloud.stream.annotation.StreamListener;
+	import org.springframework.messaging.handler.annotation.Payload;
+	import org.springframework.stereotype.Service;
+	
+	import skhappydelivery.config.kafka.KafkaProcessor;
+	
+	@Service
+	public class PolicyHandler{
+	   @Autowired 
+	   private PayRepository payRepository;
 		
+	   @Autowired
+	   private PayService payService;
+	
+	   @StreamListener(KafkaProcessor.INPUT)
+	   public void wheneverOrderCanceled_PayCancel(@Payload OrderCanceled orderCanceled){
+	
+	   if(!orderCanceled.validate()) return;
+	        
+	   System.out.println("\n\n##### listener PayCancel : " + orderCanceled.toString() + "\n\n");
+	
+	   try {
+		Optional<Pay> tempObj =  payRepository.findById(orderCanceled.getOrderId());
+	
+		Pay payObj = new Pay();
+	
+		if(tempObj.isPresent()){
+			payObj = tempObj.get();		
+		}else{
+			System.out.println("NO PAY data" );
+		}
+	
+			payObj.setPayStatus("ORDERCANCELLED");
+	
+			payRepository.save(payObj);
+	
+			System.out.println(" PAYLIST data all :  " + payRepository.findAll().toString());
+	
+			System.out.println("ORDERCANCELLED SUCCESS");
+				
+		} catch (Exception e) {
+
+	           System.out.println("\n\n##### listener PayCancel ERROR \n\n");
+			
+		}
+	
+	
+	
+	
+	    }//wheneverOrderCanceled_PayCancel
+	
 	}
 
-
-
-
-    }//wheneverOrderCanceled_PayCancel
-
-}
-***
 
 #### Correlation Key
 
