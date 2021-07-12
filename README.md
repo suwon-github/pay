@@ -78,6 +78,9 @@
 #### 셀프힐링: Liveness Probe를 통해 일정 서비스 헬스 상태 저하에 따른 Pod 재생되는지 증명
 #### 서킷브레이커 설정: 서킷브레이커 적용 + 리트라이 적용 + Pull Ejaction 적용
 #### 오토스케일러(HPA)
+<img width="962" alt="HPA(Autoscaling)_발췌" src="https://user-images.githubusercontent.com/45377807/125286975-5acd5c80-e357-11eb-81e7-a6a6df743363.png">
+
+
 #### 모니터링, 앨러팅
 #### Stateless 한 구현?
 
