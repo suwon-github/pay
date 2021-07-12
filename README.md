@@ -300,7 +300,36 @@
 
 
 #### Correlation Key
+OrderService.java
 
+	public Order getOrderService(StoreOrderAccepted storeOrderAcceptedObj) throws Exception {
+
+		System.out.println("□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□ getOrderService start "+System.currentTimeMillis()+"□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□");
+
+
+		try {
+			Optional<Order> tempObj =  orderRepository.findById(storeOrderAcceptedObj.getOrderId());
+
+			Order orderObj = new Order();
+
+			if(tempObj.isPresent()){
+				orderObj = tempObj.get();
+
+				orderObj.setOrderStatus(storeOrderAcceptedObj.getOrderStatus());
+
+				orderRepository.save(orderObj);
+	
+				return orderObj;		
+			}else{
+				return null ;
+			}
+
+		} catch (Exception e) {
+			System.out.println("save Order Error" +e.getStackTrace());
+
+			return null;
+		}
+	}
 
 #### Scaling-out(아래 HPA 참조)
 
@@ -350,6 +379,16 @@ Istio 적용 예정
 
 ### CI/CD 설정
 #### AWS Code Build 적용됐는가?
+
+##### buildspec-kubectl.yaml 파일
+
+![빌드스펙yaml파일](https://user-images.githubusercontent.com/45377807/125326441-02a95100-e37d-11eb-8db8-1130577a0cff.png)
+
+##### 빌드 성공
+![코드빌드1](https://user-images.githubusercontent.com/45377807/125326080-9e868d00-e37c-11eb-9cdb-093edb64efaf.png)
+![코드빌드2](https://user-images.githubusercontent.com/45377807/125326094-a0e8e700-e37c-11eb-8263-0babce52cb25.png)
+
+
 #### Contract Test
 #### (Advanced) Canary Deploy, Shadow Deply, A/B Test (각 2점)
                 
