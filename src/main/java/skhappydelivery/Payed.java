@@ -1,54 +1,75 @@
 
 package skhappydelivery;
 
-public class Payed extends AbstractEvent {
+public class Payed  extends AbstractEvent  {
 
-    private Long OrderID;
-    private Integer TotalPrice;
-    private Long PayMethod;
-    private Integer CardNumber;
-    private Integer DeliveryFee;
+    private Long orderId;
+    private int TotalPrice;
+    private int PayMethod;
+    private String CardNumber;
+    private int DeliveryFee;
+    private Long customerId;
+    private Long storeId;
 
-    public Long getId() {
-        return OrderID;
+	public Long getStoreId() {
+		return this.storeId;
+	}
+
+	public void setStoreId(Long storeId) {
+		this.storeId = storeId;
+	}
+
+	public Long getCustomerId() {
+		return this.customerId;
+	}
+
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
+	}
+
+    public Long getOrderId() {
+        return this.orderId;
     }
 
-    public void setId(Long OrderID) {
-        this.OrderID = OrderID;
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
-    public Integer getTotalPrice() {
+
+    public int getTotalPrice() {
         return TotalPrice;
     }
 
-    public void setTotalPrice(Integer TotalPrice) {
-        this.TotalPrice = TotalPrice;
+    public void setTotalPrice(int totalprice) {
+        this.TotalPrice = totalprice;
     }
-    public Long getPayMethod() {
+    public int getPayMethod() {
         return PayMethod;
     }
 
-    public void setPayMethod(Long PayMethod) {
+    public void setPayMethod(int PayMethod) {
         this.PayMethod = PayMethod;
     }
-    public Integer getCardNumber() {
-        return CardNumber;
-    }
 
-    public void setCardNumber(Integer CardNumber) {
-        this.CardNumber = CardNumber;
-    }
-    public Integer getDeliveryFee() {
+	public String getCardNumber() {
+		return this.CardNumber;
+	}
+
+	public void setCardNumber(String CardNumber) {
+		this.CardNumber = CardNumber;
+	}
+
+    public int getDeliveryFee() {
         return DeliveryFee;
     }
 
-    public void setDeliveryFee(Integer DeliveryFee) {
+    public void setDeliveryFee(int DeliveryFee) {
         this.DeliveryFee = DeliveryFee;
     }
 
 
     @Override
 	public String toString() {
-		return "PayedObj [OrderID=" + OrderID + ", TotalPrice=" + TotalPrice + ", PayMethod=" + PayMethod
+		return "PayedObj [orderId=" + orderId + ", TotalPrice=" + TotalPrice + ", PayMethod=" + PayMethod
 				+ ", CardNumber=" + CardNumber + ", DeliveryFee=" + DeliveryFee + "]";
 	}
 }//classPayed

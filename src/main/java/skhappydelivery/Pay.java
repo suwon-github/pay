@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PostPersist;
+import javax.persistence.PostUpdate;
 import javax.persistence.Table;
 
 import org.springframework.beans.BeanUtils;
@@ -15,28 +16,56 @@ public class Pay {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    private Long customerId;
     private Long orderId;
-    private Integer totalPrice;
-    private Long payMethod;
-    private Integer cardNumber;
-    private Integer deliveryFee;
+    private Long customerId;
+    private int totalPrice;
+    private int payMethod;
+    private String cardNumber;
+    private int deliveryFee;
+    private String payStatus;
+    private Long storeId;
+
+
 
     @PostPersist
     public void onPostPersist(){
         Payed payed = new Payed();
         BeanUtils.copyProperties(this, payed);
+       // payed.publishAfterCommit();
+       payed.setOrderId(this.orderId);
+       payed.setStoreId(this.storeId);
+
+        System.out.println(" onPostPersist PUBLISH:   " +payed.toString());
+
         payed.publishAfterCommit();
+    }
 
+    @PostUpdate
+    public void onPostUpdate(){
+        Payed payed = new Payed();
+        BeanUtils.copyProperties(this, payed);
+       // payed.publishAfterCommit();
 
-        PayCancelled payCancelled = new PayCancelled();
-        BeanUtils.copyProperties(this, payCancelled);
-        payCancelled.publishAfterCommit();
+       payed.setOrderId(this.orderId);
+       payed.setTotalPrice(this.totalPrice+this.deliveryFee);
 
+        System.out.println(" onPostUpdate PUBLISH:  " +payed.toString());
 
+        payed.publishAfterCommit();
     }
 
 
+
+ 
+
+     public Long getStoreId() {
+		return this.storeId;
+	}
+
+	public void setStoreId(Long storeId) {
+		this.storeId = storeId;
+	}
+ 
     public Long getCustomerId() {
         return customerId;
     }
@@ -58,18 +87,18 @@ public class Pay {
     public void setTotalPrice(Integer totalPrice) {
         this.totalPrice = totalPrice;
     }
-    public Long getPayMethod() {
+    public Integer getPayMethod() {
         return payMethod;
     }
 
-    public void setPayMethod(Long payMethod) {
+    public void setPayMethod(Integer payMethod) {
         this.payMethod = payMethod;
     }
-    public Integer getCardNumber() {
+    public String getCardNumber() {
         return cardNumber;
     }
 
-    public void setCardNumber(Integer cardNumber) {
+    public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
     }
     public Integer getDeliveryFee() {
@@ -80,7 +109,19 @@ public class Pay {
         this.deliveryFee = deliveryFee;
     }
 
+    public String getPayStatus() {
+		return this.payStatus;
+	}
+
+	public void setPayStatus(String payStatus) {
+		this.payStatus = payStatus;
+	}
 
 
+    @Override
+	public String toString() {
+		return "PayObj [customerId=" + customerId + ", orderId=" + orderId + ", totalPrice=" + totalPrice
+				+ ", payMethod=" + payMethod + ", cardNumber=" + cardNumber + ", deliveryFee=" + deliveryFee + ", payStatus=" + payStatus + "]";
+	}
 
 }
