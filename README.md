@@ -158,7 +158,7 @@
 		}
 ***
 
-#### Req/Res 방식의 서비스 중심 아키텍쳐 구현
+### Req/Res 방식의 서비스 중심 아키텍쳐 구현
 - 결제 서비스를 호출하기 위하여 Stub과 (FeignClient) 를 이용하여 Service 대행 인터페이스 (Proxy) 를 구현
 
 
@@ -231,7 +231,7 @@
 
 
 
-### 이벤트 드리븐 아키텍쳐의 
+### 이벤트 드리븐 아키텍쳐의 구현 
 #### kafka 활용한 Pub/Sub 구조
 
 	package skhappydelivery;
