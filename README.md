@@ -159,7 +159,9 @@
 ***
 
 ### Req/Res 방식의 서비스 중심 아키텍쳐 구현
+#### FeignClient 
 - 결제 서비스를 호출하기 위하여 Stub과 (FeignClient) 를 이용하여 Service 대행 인터페이스 (Proxy) 를 구현
+
 
 
 		package skhappydelivery.external;
@@ -229,6 +231,8 @@
             .payed(Payed);
 	    }
 
+#### Istio 구현
+<img width="1610" alt="Istio 구현" src="https://user-images.githubusercontent.com/45377807/125317383-ee148b00-e373-11eb-981d-84a7ec4ce2e6.png">
 
 
 ### 이벤트 드리븐 아키텍쳐의 구현 
