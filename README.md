@@ -36,7 +36,8 @@
 
 
 ### 헥사고날 아키텍처 다이어그램 도출
-![헥사고날 아키텍쳐 다이어그램](https://user-images.githubusercontent.com/45377807/125289960-c36a0880-e35a-11eb-9226-c99b6e23c593.png)
+![헥사고날 아키텍쳐 다이어그램](https://user-images.githubusercontent.com/45377807/125297244-08456d80-e362-11eb-9164-e53cbfa52901.png)
+
 
 
 
