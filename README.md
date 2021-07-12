@@ -118,6 +118,26 @@
     			}
 	
 		}
+
+### 주문 생성
+![오더 증적1](https://user-images.githubusercontent.com/45377807/125314385-1bac0500-e371-11eb-829e-feb8a4158772.png)
+![오더 증적2](https://user-images.githubusercontent.com/45377807/125314416-21094f80-e371-11eb-9243-44502ac1928b.png)
+### 오더에 따른 결제 호출(Req/Res)
+![결제 증적1](https://user-images.githubusercontent.com/45377807/125314434-26669a00-e371-11eb-8719-caa3e35fd054.png)
+### 결제 후 스토어에서 주문접수
+![스토어오더접수 증적](https://user-images.githubusercontent.com/45377807/125314603-4eee9400-e371-11eb-9aa3-e3484943e402.png)
+### 고객이 주문취소(주문취소에 따른 스토어의 주문접수 취소)
+#### 오더 정상생성 확인
+![오더취소 증적1](https://user-images.githubusercontent.com/45377807/125314848-865d4080-e371-11eb-97e5-3b713334fef2.png)
+![오더취소 증적2](https://user-images.githubusercontent.com/45377807/125314854-88270400-e371-11eb-90f5-ab4e83a581f2.png)
+#### 생성된 주문이 스토어에서 주문 접수됨을 확인
+![오더취소 증적3](https://user-images.githubusercontent.com/45377807/125314857-89583100-e371-11eb-9418-7278eb213a75.png)
+#### 접수된 주문에 대한 주문취소 수행
+![오더취소 증적4](https://user-images.githubusercontent.com/45377807/125314867-8b21f480-e371-11eb-8c27-0980fc7818db.png)
+
+
+
+
 ***
 
 - Entity Pattern 과 Repository Pattern 을 적용하여 JPA 를 통하여 다양한 데이터소스 유형 (RDB or NoSQL) 에 대한 
@@ -138,7 +158,80 @@
 		}
 ***
 
+#### Req/Res 방식의 서비스 중심 아키텍쳐 구현
+- 결제 서비스를 호출하기 위하여 Stub과 (FeignClient) 를 이용하여 Service 대행 인터페이스 (Proxy) 를 구현
 
+
+		package skhappydelivery.external;
+		
+		import org.springframework.cloud.openfeign.FeignClient;
+		import org.springframework.web.bind.annotation.RequestBody;
+		import org.springframework.web.bind.annotation.RequestMapping;
+		import org.springframework.web.bind.annotation.RequestMethod;
+		
+		@FeignClient(name="Pay", url="http://localhost:8085")
+		public interface PayService {
+		 
+		    @RequestMapping(method= RequestMethod.GET, path="/pays")
+		    public void pay(@RequestBody Pay pay);
+		
+		
+		    @RequestMapping(method= RequestMethod.POST, path="/payed")
+		    public void payed(@RequestBody Payed Payed);
+		
+		}
+
+
+- 주문을 받은 직후(@PostPersist) 결제를 요청하도록 처리
+
+		package skhappydelivery;
+
+		import javax.persistence.Entity;
+		import javax.persistence.GeneratedValue;
+		import javax.persistence.GenerationType;
+		import javax.persistence.Id;
+		import javax.persistence.PostPersist;
+		import javax.persistence.PostUpdate;
+		import javax.persistence.Table;
+		
+		import org.springframework.beans.BeanUtils;
+		
+		@Entity
+		@Table(name="Order_table")
+		public class Order {
+		
+	    @Id
+	    @GeneratedValue(strategy=GenerationType.AUTO)
+	    private Long orderId;
+	    private Long customerId;
+	    private String customerName;
+	    private String customerAddress;
+	    private Integer phoneNumber;
+	    private Long menuId;
+	    private Integer menuCount;
+	    private Integer menuPrice;
+	    private Long storeId;
+	    private String orderStatus;  
+		
+	    
+	    @PostPersist
+	    public void onPostPersist(){
+
+        skhappydelivery.external.Payed Payed = new skhappydelivery.external.Payed();
+        // mappings goes here
+
+        Payed.setCustomerId(this.customerId);
+        Payed.setOrderId(this.orderId);
+        Payed.setStoreId(this.storeId);
+        Payed.setTotalPrice(this.menuCount * this.menuPrice);
+
+        OrderApplication.applicationContext.getBean(skhappydelivery.external.PayService.class)
+            .payed(Payed);
+	    }
+
+
+
+### 이벤트 드리븐 아키텍쳐의 
 #### kafka 활용한 Pub/Sub 구조
 
 	package skhappydelivery;
@@ -198,6 +291,8 @@
 	    }//wheneverOrderCanceled_PayCancel
 	
 	}
+
+![카프카 실행 증적](https://user-images.githubusercontent.com/45377807/125313408-2ca84680-e370-11eb-8828-40ea04e3240c.png)
 
 
 #### Correlation Key
