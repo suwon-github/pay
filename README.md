@@ -77,9 +77,11 @@
 ### SLA 준수
 #### Pod생성 시 Liveness 와 Readiness Probe를 적용했는가?
 #### 셀프힐링: Liveness Probe를 통해 일정 서비스 헬스 상태 저하에 따른 Pod 재생되는지 증명
+<img width="1789" alt="Liveness Probe 수행" src="https://user-images.githubusercontent.com/45377807/125291419-59eaf980-e35c-11eb-90f4-edd1130c04c7.png">
+
 #### 서킷브레이커 설정: 서킷브레이커 적용 + 리트라이 적용 + Pull Ejaction 적용
 #### 오토스케일러(HPA)
-<img width="962" alt="HPA(Autoscaling)_발췌" src="https://user-images.githubusercontent.com/45377807/125286975-5acd5c80-e357-11eb-81e7-a6a6df743363.png">
+<img width="962" alt="HPA(Autoscaling)_발췌" src="https://user-images.githubusercontent.com/45377807/125291395-5192be80-e35c-11eb-9a6a-a44c133427c8.png">
 
 
 #### 모니터링, 앨러팅
