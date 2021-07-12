@@ -49,7 +49,7 @@
 
 
 ### Domain Driven Design의 적용
-각 서비스 내에 도출된 핵심 어그리게잇 객체를 엔티티로 선언했다. 이때 가능한 현업에서 사용하는 유비쿼터스 랭귀지를 사용하려 노력했다.
+- 각 서비스 내에 도출된 핵심 어그리게잇 객체를 엔티티로 선언했다. 이때 가능한 현업에서 사용하는 유비쿼터스 랭귀지를 사용하려 노력했다.
 
 
 	package skhappydelivery;
@@ -122,18 +122,19 @@
 - Entity Pattern 과 Repository Pattern 을 적용하여 JPA 를 통하여 다양한 데이터소스 유형 (RDB or NoSQL) 에 대한 
 별도의 처리가 없도록 데이터 접근 어댑터를 자동 생성하기 위하여 Spring Data REST 의 RestRepository 를 적용하였다
 
-	OrderRepository.java
 
-	package skhappydelivery;
-	
-	import org.springframework.data.repository.PagingAndSortingRepository;
-	import org.springframework.data.rest.core.annotation.RepositoryRestResource;
-	
-	@RepositoryRestResource(collectionResourceRel="orders", path="orders")
-	public interface OrderRepository extends PagingAndSortingRepository<Order, Long>{
-	
-	
-	}
+		OrderRepository.java
+		
+		package skhappydelivery;
+		
+		import org.springframework.data.repository.PagingAndSortingRepository;
+		import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+		
+		@RepositoryRestResource(collectionResourceRel="orders", path="orders")
+		public interface OrderRepository extends PagingAndSortingRepository<Order, Long>{
+		
+		
+		}
 
 
 #### kafka 활용한 Pub/Sub 구조
