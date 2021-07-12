@@ -62,7 +62,7 @@
 
 
 ### 적용 후 REST API의 테스트
-![REST API테스트](https://user-images.githubusercontent.com/45377807/125292604-9539f800-e35d-11eb-86de-6c6187f6ba2b.png)
+![REST API테스트](https://user-images.githubusercontent.com/45377807/125294258-1645bf00-e35f-11eb-896e-31fb17193885.png)
 
 
 ### Polyglot Programming/Persistence
