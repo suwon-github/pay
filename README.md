@@ -371,27 +371,34 @@ OrderService.java
 Client에게 항상 주문의 상태를 View로 보여주기 위해 Order Aggregate OrderStatus 상태를 관리한다.
 - 주문 접수
 <img width="1000" alt="주문접수" src="https://user-images.githubusercontent.com/45377807/125378724-365e9800-e3ca-11eb-9625-232007753f17.png"><br/>
-
+<img width="1000" alt="주문접수_1" src="https://user-images.githubusercontent.com/45377807/125395781-95caa100-e3e6-11eb-9826-cd790f677f91.png"><br/>
 
  
 - 주문 결제 
 <img width="1000" alt="주문결제" src="https://user-images.githubusercontent.com/45377807/125378738-3b234c00-e3ca-11eb-9ba6-27ccbdae0a5e.png"><br/>
+![주문 결제_1](https://user-images.githubusercontent.com/45377807/125395795-9b27eb80-e3e6-11eb-967a-a997a12c094d.png)
 
  
 - 상점 주인 주문 승인 
 <img width="1000" alt="주문승인" src="https://user-images.githubusercontent.com/45377807/125378751-3eb6d300-e3ca-11eb-8e8f-6d1954693138.png"><br/>
+![주문승인_1](https://user-images.githubusercontent.com/45377807/125395800-9d8a4580-e3e6-11eb-9b34-e8cda3f65af4.png)
 
  
 - 요리 시작
 <img width="1000" alt="요리시작" src="https://user-images.githubusercontent.com/45377807/125378770-49716800-e3ca-11eb-8d11-c99ec2c3f2e0.png"><br/>
- 
+![요리시작_1](https://user-images.githubusercontent.com/45377807/125395812-a1b66300-e3e6-11eb-98c3-25570f9b56b1.png)
+
+
 → 각 데이터 증적은 ~8081/orderList로 확인한 데이터이다. 
 
 - 주문 취소, 결제 취소, 주문 승인 거절, 등의 케이스에서 역시 Order Aggregate에서 데이터를 관리하고 있음을 확인할 수 있다. 
 
 
 
-#### Message Consumer(??)
+#### Message Consumer(kafka)
+<img width="900" alt="카프카 실행 증적" src="https://user-images.githubusercontent.com/45377807/125395260-e988ba80-e3e5-11eb-998c-c587e2b7f9dd.png"><br/>
+
+
 
 엔티티 패턴과 레포지토리 패턴을 적용하여 JPA를 통한 다양한 데이터소스 유향에 대한 별도의 처리가 없도록 데이터 접근 어댑터를 자동 생성하기 위하여 Spring Data REST의 Repository를 적용했다.
 
@@ -411,10 +418,130 @@ Client에게 항상 주문의 상태를 View로 보여주기 위해 Order Aggreg
 
 ### SLA 준수
 #### Pod생성 시 Liveness 와 Readiness Probe를 적용했는가?
+##### order deployment.yml
+
+	apiVersion: apps/v1
+	kind: Deployment
+	metadata:
+	  name: order
+	  labels:
+	    app: order
+	spec:
+	  replicas: 1
+	  selector:
+	    matchLabels:
+ 	     app: order
+	  template:
+	    metadata:
+	      labels:
+ 	       app: order
+	    spec:
+	      containers:
+ 	       - name: order
+ 	         image: 879772956301.dkr.ecr.ap-southeast-2.amazonaws.com/user05-order:v2
+	          args:
+   	         - /bin/sh
+  	          - -c
+  	          - touch /tmp/healthy; sleep 30; rm -rf /tmp/healthy; sleep 600
+  	        ports:
+  	          - containerPort: 8080
+		  readinessProbe:
+		    exec:
+		      command:
+		      - cat
+		      - /tmp/healthy
+		    initialDelaySeconds: 10
+		    timeoutSeconds: 2
+		    periodSeconds: 5
+		    failureThreshold: 10
+		  livenessProbe:
+		    exec:
+		      command:
+		      - cat
+		      - /tmp/healthy
+		    initialDelaySeconds: 120
+		    timeoutSeconds: 2
+		    periodSeconds: 5
+		    failureThreshold: 5
+		  volumeMounts:
+		  - mountPath: "/mnt/aws"
+		    name: volume
+	      volumes:
+		  - name: volume
+		    persistentVolumeClaim:
+		      claimName: aws-efs
+
+
+
+
 #### 셀프힐링: Liveness Probe를 통해 일정 서비스 헬스 상태 저하에 따른 Pod 재생되는지 증명
 <img width="1000" alt="Liveness Probe 수행" src="https://user-images.githubusercontent.com/45377807/125291419-59eaf980-e35c-11eb-90f4-edd1130c04c7.png"><br/>
 
 #### 서킷브레이커 설정
+##### OrderService.java
+
+	@Transactional
+		public Order getOrderService(StoreOrderAccepted storeOrderAcceptedObj) throws Exception {
+
+			System.out.println("□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□ getOrderService start "+System.currentTimeMillis()+"□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□");
+
+			try {
+				Optional<Order> tempObj =  orderRepository.findById(storeOrderAcceptedObj.getOrderId());
+
+				Order orderObj = new Order();
+
+		    try {
+		    System.out.println("\n\n\n\n\n\nWAITINGWAITINGWAITINGWAITINGWAITINGWAITINGWAITINGWAITINGWAITINGWAITINGWAITINGWAITINGWAITING");
+
+		       Thread.currentThread().sleep((long) (400 + Math.random() * 220));
+		    } catch (InterruptedException e) {
+			e.printStackTrace();
+		    }
+
+				if(tempObj.isPresent()){
+					orderObj = tempObj.get();
+
+					orderObj.setOrderStatus(storeOrderAcceptedObj.getOrderStatus());
+
+					orderRepository.save(orderObj);
+
+					return orderObj;		
+				}else{
+					return null ;
+				}
+
+			} catch (Exception e) {
+				System.out.println("save Order Error" +e.getStackTrace());
+
+				return null;
+			}
+		}
+
+	 }//classOrderPlacedService
+
+	Store
+
+	Application.yml
+
+	feign:
+	  hystrix:
+	    enabled: true
+
+	# To set thread isolation to SEMAPHORE
+	#hystrix:
+	#  command:
+	#    default:
+	#      execution:
+	#        isolation:
+	#          strategy: SEMAPHORE
+
+	hystrix:
+	  command:
+	    # 전역설정
+	    default:
+	      execution.isolation.thread.timeoutInMilliseconds: 610
+
+
 
 
 #### 오토스케일러(HPA)
