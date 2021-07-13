@@ -369,7 +369,6 @@ OrderService.java
 
 #### Message Consumer
 
-
 엔티티 패턴과 레포지토리 패턴을 적용하여 JPA를 통한 다양한 데이터소스 유향에 대한 별도의 처리가 없도록 데이터 접근 어댑터를 자동 생성하기 위하여 Spring Data REST의 Repository를 적용했다.
 
 
@@ -415,12 +414,15 @@ OrderService.java
 <img width="800" alt="코드빌드1" src="https://user-images.githubusercontent.com/45377807/125326080-9e868d00-e37c-11eb-9cdb-093edb64efaf.png"><br/>
 <img width="800" alt="코드빌드2" src="https://user-images.githubusercontent.com/45377807/125326094-a0e8e700-e37c-11eb-8263-0babce52cb25.png"><br/>
 
-
-#### Contract Test
-#### (Advanced) Canary Deploy, Shadow Deply, A/B Test (각 2점)
                 
 ### 운영 유연성
 #### Config Map / Secret
+ConfigMap은 Persistent Volume 으로 구현
+<img width="1367" alt="PV 할당" src="https://user-images.githubusercontent.com/45377807/125376098-3e680900-e3c5-11eb-909d-79f359a9fa57.png"><br/>
+<img width="1366" alt="pod 내 volume 마운트" src="https://user-images.githubusercontent.com/45377807/125376100-4162f980-e3c5-11eb-9585-9f01a8afe4ed.png"><br/>
+
+
+
 
 
 
