@@ -40,30 +40,31 @@
 
 
 ### 액터, 커맨드 부착
-<img width="800" alt="액터 및 커맨드 부착" src="https://user-images.githubusercontent.com/45377807/125232032-c3e0b000-e316-11eb-8af4-cf98f7b97dac.png"><br/>
+<img width="650" alt="액터 및 커맨드 부착" src="https://user-images.githubusercontent.com/45377807/125232032-c3e0b000-e316-11eb-8af4-cf98f7b97dac.png"><br/>
  
 
 ### 어그리게잇 묶기
-<img width="800" alt="어그리게잇 묶기" src="https://user-images.githubusercontent.com/45377807/125232099-e7a3f600-e316-11eb-97ae-275b528205bd.png"><br/>
+<img width="650" alt="어그리게잇 묶기" src="https://user-images.githubusercontent.com/45377807/125232099-e7a3f600-e316-11eb-97ae-275b528205bd.png"><br/>
 
 
 ### 바운디드 컨텍스트 묶기
-<img width="830" alt="바운디드컨텍스트 묶기" src="https://user-images.githubusercontent.com/45377807/125232137-f7bbd580-e316-11eb-82f0-293cd566faac.png"><br/>
+<img width="650" alt="바운디드컨텍스트 묶기" src="https://user-images.githubusercontent.com/45377807/125232137-f7bbd580-e316-11eb-82f0-293cd566faac.png"><br/>
 
 
 ### 폴리시 부착
-<img width="828" alt="폴리시 추가" src="https://user-images.githubusercontent.com/45377807/125232200-16ba6780-e317-11eb-9e1d-db6cce330b92.png"><br/>
+<img width="650" alt="폴리시 추가" src="https://user-images.githubusercontent.com/45377807/125232200-16ba6780-e317-11eb-9e1d-db6cce330b92.png"><br/>
 
 
 ### 완성된 모형(실선은 Req/Res, 점선은 Pub/Sub)
-<img width="830" alt="이벤트스토밍 결과" src="https://user-images.githubusercontent.com/45377807/125232289-423d5200-e317-11eb-83e9-f936ad5ea2c4.png"><br/>
-
+<img width="650" alt="이벤트스토밍 결과" src="https://user-images.githubusercontent.com/45377807/125232289-423d5200-e317-11eb-83e9-f936ad5ea2c4.png"><br/>
+<br/>
 
 
 ### 헥사고날 아키텍처 다이어그램 도출
-<img width="700" alt="헥사고날 아키텍쳐 다이어그램" src="https://user-images.githubusercontent.com/45377807/125297244-08456d80-e362-11eb-9164-e53cbfa52901.png"><br/>
+<img width="650" alt="헥사고날 아키텍쳐 다이어그램" src="https://user-images.githubusercontent.com/45377807/125297244-08456d80-e362-11eb-9164-e53cbfa52901.png"><br/>
 
-
+<br/>
+<br/>
 
 
 ## 2. 구현
@@ -143,21 +144,6 @@
     			}
 	
 		}
-
-### 주문 생성
-<img width="800" alt="오더 증적1" src="https://user-images.githubusercontent.com/45377807/125314385-1bac0500-e371-11eb-829e-feb8a4158772.png"><br/>
-<img width="800" alt="오더 증적2" src="https://user-images.githubusercontent.com/45377807/125314416-21094f80-e371-11eb-9243-44502ac1928b.png"><br/>
-### 오더에 따른 결제 호출(Req/Res)
-<img width="800" alt="결제 증적1" src="https://user-images.githubusercontent.com/45377807/125314434-26669a00-e371-11eb-8719-caa3e35fd054.png"><br/>
-### 결제 후 스토어에서 주문접수
-<img width="800" alt="스토어오더접수 증적" src="https://user-images.githubusercontent.com/45377807/125314603-4eee9400-e371-11eb-9aa3-e3484943e402.png"><br/>
-### 고객이 주문취소(주문취소에 따른 스토어의 주문접수 취소)
-#### 오더 정상생성 확인
-<img width="800" alt="오더취소 증적1" src="https://user-images.githubusercontent.com/45377807/125314848-865d4080-e371-11eb-97e5-3b713334fef2.png"><br/>
-<img width="800" alt="오더취소 증적2" src="https://user-images.githubusercontent.com/45377807/125314854-88270400-e371-11eb-90f5-ab4e83a581f2.png"><br/>
-<img width="800" alt="오더취소 증적3" src="https://user-images.githubusercontent.com/45377807/125314857-89583100-e371-11eb-9418-7278eb213a75.png"><br/>
-#### 접수된 주문에 대한 주문취소 수행
-<img width="800" alt="오더취소 증적4" src="https://user-images.githubusercontent.com/45377807/125314867-8b21f480-e371-11eb-8c27-0980fc7818db.png"><br/>
 
 
 
@@ -321,6 +307,23 @@
 	}
 
 <img width="1000" alt="카프카 실행 증적" src="https://user-images.githubusercontent.com/45377807/125313408-2ca84680-e370-11eb-8828-40ea04e3240c.png"><br/>
+
+#### 이벤트 드리븐 서비스 증적
+##### 주문 생성
+<img width="800" alt="오더 증적1" src="https://user-images.githubusercontent.com/45377807/125314385-1bac0500-e371-11eb-829e-feb8a4158772.png"><br/>
+<img width="800" alt="오더 증적2" src="https://user-images.githubusercontent.com/45377807/125314416-21094f80-e371-11eb-9243-44502ac1928b.png"><br/>
+##### 오더에 따른 결제 호출(Req/Res)
+<img width="800" alt="결제 증적1" src="https://user-images.githubusercontent.com/45377807/125314434-26669a00-e371-11eb-8719-caa3e35fd054.png"><br/>
+##### 결제 후 스토어에서 주문접수
+<img width="800" alt="스토어오더접수 증적" src="https://user-images.githubusercontent.com/45377807/125314603-4eee9400-e371-11eb-9aa3-e3484943e402.png"><br/>
+##### 고객이 주문취소(주문취소에 따른 스토어의 주문접수 취소)
+##### 오더 정상생성 확인
+<img width="800" alt="오더취소 증적1" src="https://user-images.githubusercontent.com/45377807/125314848-865d4080-e371-11eb-97e5-3b713334fef2.png"><br/>
+<img width="800" alt="오더취소 증적2" src="https://user-images.githubusercontent.com/45377807/125314854-88270400-e371-11eb-90f5-ab4e83a581f2.png"><br/>
+<img width="800" alt="오더취소 증적3" src="https://user-images.githubusercontent.com/45377807/125314857-89583100-e371-11eb-9418-7278eb213a75.png"><br/>
+##### 접수된 주문에 대한 주문취소 수행
+<img width="800" alt="오더취소 증적4" src="https://user-images.githubusercontent.com/45377807/125314867-8b21f480-e371-11eb-8c27-0980fc7818db.png"><br/>
+
 
 
 #### Correlation Key
