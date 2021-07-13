@@ -397,59 +397,59 @@ OrderService.java
 
 ### SLA 준수
 #### Pod생성 시 Liveness 와 Readiness Probe를 적용했는가?
-##### Readiness Probe 적
+##### Readiness Probe 적용
 - order deployment.yml
 
-	apiVersion: apps/v1
-	kind: Deployment
-	metadata:
-	  name: order
-	  labels:
-	    app: order
-	spec:
-	  replicas: 1
-	  selector:
-	    matchLabels:
- 	     app: order
-	  template:
-	    metadata:
-	      labels:
- 	       app: order
-	    spec:
-	      containers:
- 	       - name: order
- 	         image: 879772956301.dkr.ecr.ap-southeast-2.amazonaws.com/user05-order:v2
-	          args:
-   	         - /bin/sh
-  	          - -c
-  	          - touch /tmp/healthy; sleep 30; rm -rf /tmp/healthy; sleep 600
-  	        ports:
-  	          - containerPort: 8080
-		  readinessProbe:
-		    exec:
-		      command:
-		      - cat
-		      - /tmp/healthy
-		    initialDelaySeconds: 10
-		    timeoutSeconds: 2
-		    periodSeconds: 5
-		    failureThreshold: 10
-		  livenessProbe:
-		    exec:
-		      command:
-		      - cat
-		      - /tmp/healthy
-		    initialDelaySeconds: 120
-		    timeoutSeconds: 2
-		    periodSeconds: 5
-		    failureThreshold: 5
-		  volumeMounts:
-		  - mountPath: "/mnt/aws"
-		    name: volume
-	      volumes:
-		  - name: volume
-		    persistentVolumeClaim:
-		      claimName: aws-efs
+		apiVersion: apps/v1
+		kind: Deployment
+		metadata:
+		  name: order
+		  labels:
+		    app: order
+		spec:
+		  replicas: 1
+		  selector:
+		    matchLabels:
+		     app: order
+		  template:
+		    metadata:
+		      labels:
+		       app: order
+		    spec:
+		      containers:
+		       - name: order
+			 image: 879772956301.dkr.ecr.ap-southeast-2.amazonaws.com/user05-order:v2
+			  args:
+			 - /bin/sh
+			  - -c
+			  - touch /tmp/healthy; sleep 30; rm -rf /tmp/healthy; sleep 600
+			ports:
+			  - containerPort: 8080
+			  readinessProbe:
+			    exec:
+			      command:
+			      - cat
+			      - /tmp/healthy
+			    initialDelaySeconds: 10
+			    timeoutSeconds: 2
+			    periodSeconds: 5
+			    failureThreshold: 10
+			  livenessProbe:
+			    exec:
+			      command:
+			      - cat
+			      - /tmp/healthy
+			    initialDelaySeconds: 120
+			    timeoutSeconds: 2
+			    periodSeconds: 5
+			    failureThreshold: 5
+			  volumeMounts:
+			  - mountPath: "/mnt/aws"
+			    name: volume
+		      volumes:
+			  - name: volume
+			    persistentVolumeClaim:
+			      claimName: aws-efs
 
 
 
