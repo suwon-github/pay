@@ -41,21 +41,23 @@
 <img width="650" alt="액터 및 커맨드 부착" src="https://user-images.githubusercontent.com/45377807/125232032-c3e0b000-e316-11eb-8af4-cf98f7b97dac.png"><br/>
  
 
+### 폴리시 부착
+<img width="650" alt="폴리시 추가" src="https://user-images.githubusercontent.com/45377807/125399202-3ae77880-e3eb-11eb-9152-2f069f7f553f.png">
+
+
+
 ### 어그리게잇 묶기
-<img width="650" alt="어그리게잇 묶기" src="https://user-images.githubusercontent.com/45377807/125232099-e7a3f600-e316-11eb-97ae-275b528205bd.png"><br/>
+<img width="650" alt="어그리게잇으로 묶기" src="https://user-images.githubusercontent.com/45377807/125399214-3de26900-e3eb-11eb-886f-465414fcf4db.png">
 
 
 ### 바운디드 컨텍스트 묶기
-<img width="650" alt="바운디드컨텍스트 묶기" src="https://user-images.githubusercontent.com/45377807/125232137-f7bbd580-e316-11eb-82f0-293cd566faac.png"><br/>
+<img width="814" alt="바운디드컨텍스트 묶기" src="https://user-images.githubusercontent.com/45377807/125399252-4a66c180-e3eb-11eb-9d48-b31fda1d7227.png">
 
-
-### 폴리시 부착
-<img width="650" alt="폴리시 추가" src="https://user-images.githubusercontent.com/45377807/125232200-16ba6780-e317-11eb-9e1d-db6cce330b92.png"><br/>
 
 
 ### 완성된 모형(실선은 Req/Res, 점선은 Pub/Sub)
-<img width="650" alt="이벤트스토밍 결과" src="https://user-images.githubusercontent.com/45377807/125232289-423d5200-e317-11eb-83e9-f936ad5ea2c4.png"><br/>
-<br/>
+<img width="847" alt="이벤트스토밍 결과" src="https://user-images.githubusercontent.com/45377807/125399275-518dcf80-e3eb-11eb-8092-221a4a7fb467.png">
+
 
 
 ### 헥사고날 아키텍처 다이어그램 도출
