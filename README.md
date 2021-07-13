@@ -381,6 +381,9 @@ OrderService.java
 
 엔티티 패턴과 레포지토리 패턴을 적용하여 JPA를 통한 다양한 데이터소스 유향에 대한 별도의 처리가 없도록 데이터 접근 어댑터를 자동 생성하기 위하여 Spring Data REST의 Repository를 적용했다.
 
+#### API Gateway
+<img width="900" alt="gateway-2" src="https://user-images.githubusercontent.com/45377807/125408133-8868e300-e3f5-11eb-94a3-cd97329c5a54.JPG"><br/>
+
 
 ### 적용 후 REST API의 테스트
 <img width="300" alt="REST API테스트" src="https://user-images.githubusercontent.com/45377807/125294258-1645bf00-e35f-11eb-896e-31fb17193885.png"><br/>
