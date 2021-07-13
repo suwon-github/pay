@@ -367,30 +367,10 @@ OrderService.java
 <img width="800" alt="오더취소 증적4" src="https://user-images.githubusercontent.com/45377807/125314867-8b21f480-e371-11eb-8c27-0980fc7818db.png"><br/>
 
 #### CQRS
-Client에게 항상 주문의 상태를 View로 보여주기 위해 Order Aggregate OrderStatus 상태를 관리한다.
-- 주문 접수
-<img width="1000" alt="주문접수" src="https://user-images.githubusercontent.com/45377807/125378724-365e9800-e3ca-11eb-9625-232007753f17.png"><br/>
-<img width="1000" alt="주문접수_1" src="https://user-images.githubusercontent.com/45377807/125395781-95caa100-e3e6-11eb-9826-cd790f677f91.png"><br/>
+<img width="500" alt="CQRS_1" src="https://user-images.githubusercontent.com/45377807/125406548-ea284d80-e3f3-11eb-9d08-08eb4c72bc33.png"><br/>
+<img width="500" alt="CQRS_2" src="https://user-images.githubusercontent.com/45377807/125406570-eeed0180-e3f3-11eb-8e84-ec99f1e410fb.png"><br/>
+<img width="500" alt="CQRS_3" src="https://user-images.githubusercontent.com/45377807/125406964-602cb480-e3f4-11eb-9c8a-fd7237e57268.png"><br/>
 
- 
-- 주문 결제 
-<img width="1000" alt="주문결제" src="https://user-images.githubusercontent.com/45377807/125378738-3b234c00-e3ca-11eb-9ba6-27ccbdae0a5e.png"><br/>
-![주문 결제_1](https://user-images.githubusercontent.com/45377807/125395795-9b27eb80-e3e6-11eb-967a-a997a12c094d.png)
-
- 
-- 상점 주인 주문 승인 
-<img width="1000" alt="주문승인" src="https://user-images.githubusercontent.com/45377807/125378751-3eb6d300-e3ca-11eb-8e8f-6d1954693138.png"><br/>
-![주문승인_1](https://user-images.githubusercontent.com/45377807/125395800-9d8a4580-e3e6-11eb-9b34-e8cda3f65af4.png)
-
- 
-- 요리 시작
-<img width="1000" alt="요리시작" src="https://user-images.githubusercontent.com/45377807/125378770-49716800-e3ca-11eb-8d11-c99ec2c3f2e0.png"><br/>
-![요리시작_1](https://user-images.githubusercontent.com/45377807/125395812-a1b66300-e3e6-11eb-98c3-25570f9b56b1.png)
-
-
-→ 각 데이터 증적은 ~8081/orderList로 확인한 데이터이다. 
-
-- 주문 취소, 결제 취소, 주문 승인 거절, 등의 케이스에서 역시 Order Aggregate에서 데이터를 관리하고 있음을 확인할 수 있다. 
 
 
 
