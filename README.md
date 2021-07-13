@@ -148,7 +148,7 @@
 
 
 
-***
+
 
 - Entity Pattern 과 Repository Pattern 을 적용하여 JPA 를 통하여 다양한 데이터소스 유형 (RDB or NoSQL) 에 대한 
 별도의 처리가 없도록 데이터 접근 어댑터를 자동 생성하기 위하여 Spring Data REST 의 RestRepository 를 적용하였다
@@ -166,7 +166,8 @@
 			
 			
 		}
-***
+<br/>
+<br/>
 
 ### Req/Res 방식의 서비스 중심 아키텍쳐 구현
 #### FeignClient 
@@ -358,8 +359,8 @@ OrderService.java
 		}
 	}
 
-#### Scaling-out(아래 HPA 참조)
-
+#### Scaling-out
+<img width="1000" alt="HPA(Autoscaling)_발췌" src="https://user-images.githubusercontent.com/45377807/125291395-5192be80-e35c-11eb-9a6a-a44c133427c8.png"><br/>
 
 #### 취소에 따른 보상 트랜젝션
 
@@ -399,7 +400,12 @@ OrderService.java
 
 
 #### 모니터링, 앨러팅
-#### Stateless 한 구현?
+##### Kiali
+<img width="800" alt="모니터링_kiali" src="https://user-images.githubusercontent.com/45377807/125376611-5e4bfc80-e3c6-11eb-97e9-1b83e68d207e.png"><br/>
+
+
+##### Jaeger
+<img width="800" alt="모니터링_예거" src="https://user-images.githubusercontent.com/45377807/125376614-6015c000-e3c6-11eb-8112-deb54075ba48.png"><br/>
 
 
 
@@ -407,7 +413,6 @@ OrderService.java
 #### AWS Code Build 적용됐는가?
 
 ##### buildspec-kubectl.yaml 파일
-
 <img width="400" alt="빌드스펙yaml파일" src="https://user-images.githubusercontent.com/45377807/125326441-02a95100-e37d-11eb-8db8-1130577a0cff.png"><br/>
 
 ##### 빌드 성공
