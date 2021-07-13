@@ -11,7 +11,7 @@
 - 상점주인이 확인하여 주문을 접수하여 조리를 시작한다
 - 고객이 주문을 취소할 수 있다
 - 주문이 취소되면 조리가 취소된다
-- 주문상태가 이벤트 발생시 마다 업데이트 된다
+- 주문상태가 이벤트 발생시 마다 업데이트되어 View를 통해 보여진다
 
 ### 비기능적 요구사항
 
@@ -19,7 +19,9 @@
 - 결제가 되지 않은 주문건은 아예 거래가 성립되지 않아야 한다 Sync 호출
 - 장애격리
 - 상점관리 기능이 수행되지 않더라도 주문은 365일 24시간 받을 수 있어야 한다 Async (event-driven), Eventual Consistency
-- 결제시스템이 과중되면 사용자를 잠시동안 받지 않고 결제를 잠시후에 하도록 유도한다 Circuit breaker, fallback
+- 주문이 과도하게 생성되면 주문 생성을 잠시 지연하도록 유도한다 Circuit breaker, fallback
+<br/>
+
 #### 성능
 - 고객이 자주 상점관리에서 확인할 수 있는 배달상태를 주문시스템(프론트엔드)에서 확인할 수 있어야 한다 CQRS
 - 주문상태가 바뀔때마다 Front End에 업데이트 할 수 있어야 한다 Event driven
@@ -366,9 +368,30 @@ OrderService.java
 
 
 #### CQRS
+Client에게 항상 주문의 상태를 View로 보여주기 위해 Order Aggregate OrderStatus 상태를 관리한다.
+- 주문 접수
+<img width="1000" alt="주문접수" src="https://user-images.githubusercontent.com/45377807/125378724-365e9800-e3ca-11eb-9625-232007753f17.png"><br/>
 
 
-#### Message Consumer
+ 
+- 주문 결제 
+<img width="1000" alt="주문결제" src="https://user-images.githubusercontent.com/45377807/125378738-3b234c00-e3ca-11eb-9ba6-27ccbdae0a5e.png"><br/>
+
+ 
+- 상점 주인 주문 승인 
+<img width="1000" alt="주문승인" src="https://user-images.githubusercontent.com/45377807/125378751-3eb6d300-e3ca-11eb-8e8f-6d1954693138.png"><br/>
+
+ 
+- 요리 시작
+<img width="1000" alt="요리시작" src="https://user-images.githubusercontent.com/45377807/125378770-49716800-e3ca-11eb-8d11-c99ec2c3f2e0.png"><br/>
+ 
+→ 각 데이터 증적은 ~8081/orderList로 확인한 데이터이다. 
+
+- 주문 취소, 결제 취소, 주문 승인 거절, 등의 케이스에서 역시 Order Aggregate에서 데이터를 관리하고 있음을 확인할 수 있다. 
+
+
+
+#### Message Consumer(??)
 
 엔티티 패턴과 레포지토리 패턴을 적용하여 JPA를 통한 다양한 데이터소스 유향에 대한 별도의 처리가 없도록 데이터 접근 어댑터를 자동 생성하기 위하여 Spring Data REST의 Repository를 적용했다.
 
@@ -377,8 +400,7 @@ OrderService.java
 <img width="300" alt="REST API테스트" src="https://user-images.githubusercontent.com/45377807/125294258-1645bf00-e35f-11eb-896e-31fb17193885.png"><br/>
 
 
-### Polyglot Programming/Persistence
- 
+
 <br/>
 <br/>
 <br/> 
@@ -392,7 +414,7 @@ OrderService.java
 #### 셀프힐링: Liveness Probe를 통해 일정 서비스 헬스 상태 저하에 따른 Pod 재생되는지 증명
 <img width="1000" alt="Liveness Probe 수행" src="https://user-images.githubusercontent.com/45377807/125291419-59eaf980-e35c-11eb-90f4-edd1130c04c7.png"><br/>
 
-#### 서킷브레이커 설정: 서킷브레이커 적용(상단 Istio 구현 참조)
+#### 서킷브레이커 설정
 
 
 #### 오토스케일러(HPA)
