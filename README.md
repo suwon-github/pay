@@ -3,29 +3,23 @@
 ## 서비스 시나리오
 ### SK행복 배달 서비스
 
-### 기능적 요구사항
-
+####기능적 요구사항
 - 고객이 메뉴를 선택하여 주문한다
 - 고객이 결제한다
-- 주문이 되면 주문 내역이 입점상점주인에게 전달된다
+- 결제가 되면 주문 및 결제 내역이 입점상점주인에게 전달된다
+- 상점주인은 주문을 승인할 수 있다.
+- 상점주인은 주문을 거절할 수 있다.
 - 상점주인이 확인하여 주문을 접수하여 조리를 시작한다
 - 고객이 주문을 취소할 수 있다
-- 주문이 취소되면 조리가 취소된다
+- 결제가 취소되면 상점에도 전달된다.
 - 주문상태가 이벤트 발생시 마다 업데이트되어 View를 통해 보여진다
-
-### 비기능적 요구사항
-
-#### 트랜잭션
-- 결제가 되지 않은 주문건은 아예 거래가 성립되지 않아야 한다 Sync 호출
-- 장애격리
+#### 비기능적 요구사항
+##### 트랜잭션
+- 주문이 되면 무조건 결제에 데이터가 저장된다. Sync 호출
+- 상점주인이 주문을 승인하면 배달되어질 정보를 Order에서 가져와 저장된다.
+##### 장애격리
 - 상점관리 기능이 수행되지 않더라도 주문은 365일 24시간 받을 수 있어야 한다 Async (event-driven), Eventual Consistency
 - 주문이 과도하게 생성되면 주문 생성을 잠시 지연하도록 유도한다 Circuit breaker, fallback
-<br/>
-
-#### 성능
-- 고객이 자주 상점관리에서 확인할 수 있는 배달상태를 주문시스템(프론트엔드)에서 확인할 수 있어야 한다 CQRS
-- 주문상태가 바뀔때마다 Front End에 업데이트 할 수 있어야 한다 Event driven
-
 
 ## 1. 분석/설계
 
@@ -365,7 +359,8 @@ OrderService.java
 <img width="1000" alt="HPA(Autoscaling)_발췌" src="https://user-images.githubusercontent.com/45377807/125291395-5192be80-e35c-11eb-9a6a-a44c133427c8.png"><br/>
 
 #### 취소에 따른 보상 트랜젝션
-
+##### 접수된 주문에 대한 주문취소 수행
+<img width="800" alt="오더취소 증적4" src="https://user-images.githubusercontent.com/45377807/125314867-8b21f480-e371-11eb-8c27-0980fc7818db.png"><br/>
 
 #### CQRS
 Client에게 항상 주문의 상태를 View로 보여주기 위해 Order Aggregate OrderStatus 상태를 관리한다.
@@ -418,7 +413,8 @@ Client에게 항상 주문의 상태를 View로 보여주기 위해 Order Aggreg
 
 ### SLA 준수
 #### Pod생성 시 Liveness 와 Readiness Probe를 적용했는가?
-##### order deployment.yml
+##### Readiness Probe 적
+- order deployment.yml
 
 	apiVersion: apps/v1
 	kind: Deployment
@@ -474,7 +470,7 @@ Client에게 항상 주문의 상태를 View로 보여주기 위해 Order Aggreg
 
 
 
-#### 셀프힐링: Liveness Probe를 통해 일정 서비스 헬스 상태 저하에 따른 Pod 재생되는지 증명
+#### 셀프힐링: Liveness Probe 
 <img width="1000" alt="Liveness Probe 수행" src="https://user-images.githubusercontent.com/45377807/125291419-59eaf980-e35c-11eb-90f4-edd1130c04c7.png"><br/>
 
 #### 서킷브레이커 설정
@@ -542,6 +538,7 @@ Client에게 항상 주문의 상태를 View로 보여주기 위해 Order Aggreg
 	      execution.isolation.thread.timeoutInMilliseconds: 610
 
 
+<img width="1000" alt="써킷브레이커-1" src="https://user-images.githubusercontent.com/45377807/125397429-e3480d80-e3e8-11eb-8e8c-e49329bcf9b9.JPG"><br/>
 
 
 #### 오토스케일러(HPA)
