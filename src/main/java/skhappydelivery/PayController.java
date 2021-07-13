@@ -45,6 +45,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 	} //Payed
 
 
+	        
+	@RequestMapping(value="/payCancelled", method=RequestMethod.POST)
+	public String payCancelled(@RequestBody PayCancelled payCancelledObj) throws Exception {
+		
+		System.out.println("□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□ payCancelledController start "+System.currentTimeMillis()+"□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□");
+		System.out.println(" INput payCancelledObj :  " + payCancelledObj.toString());
+		
+		return payService.payCanceledService(payCancelledObj);
+	} 
+        
+
+
 
 
 

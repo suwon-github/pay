@@ -82,12 +82,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 	@Transactional
-	public String payCanceledService(OrderCanceled orderCanceledObj) throws Exception {
+	public String payCanceledService(PayCancelled payCancelledObj) throws Exception {
 
 		System.out.println("□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□ payCanceledService start "+System.currentTimeMillis()+"□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□");
 
 		try {
-			Optional<Pay> tempObj =  payRepository.findById(orderCanceledObj.getOrderId());
+			Optional<Pay> tempObj =  payRepository.findById(payCancelledObj.getOrderId());
 
 			Pay payObj = new Pay();
 
@@ -97,7 +97,7 @@ import org.springframework.transaction.annotation.Transactional;
 				return "no PAY data" ;
 			}
 
-			payObj.setPayStatus("PAYCANCELLED");
+			payObj.setPayStatus("PAY CANCELLED");
 
 			payRepository.save(payObj);
 	

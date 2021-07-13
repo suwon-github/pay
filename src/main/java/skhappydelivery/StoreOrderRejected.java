@@ -4,24 +4,27 @@ package skhappydelivery;
 public class StoreOrderRejected extends AbstractEvent {
 
     private Long OrderID;
-    private Integer RejectCode;
+    private int RejectCode;
+
+	public int getRejectCode() {
+		return this.RejectCode;
+	}
+
+	public void setRejectCode(int RejectCode) {
+		this.RejectCode = RejectCode;
+	}
+
     private String RejectDetail;
     private String OrderStatus;
 
-    public Long getId() {
+    public Long getOrderId() {
         return OrderID;
     }
 
-    public void setId(Long OrderID) {
+    public void setOrderId(Long OrderID) {
         this.OrderID = OrderID;
     }
-    public Integer getRejectCode() {
-        return RejectCode;
-    }
-
-    public void setRejectCode(Integer RejectCode) {
-        this.RejectCode = RejectCode;
-    }
+ 
     public String getRejectDetail() {
         return RejectDetail;
     }

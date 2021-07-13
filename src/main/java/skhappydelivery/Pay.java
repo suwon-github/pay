@@ -42,16 +42,35 @@ public class Pay {
 
     @PostUpdate
     public void onPostUpdate(){
-        Payed payed = new Payed();
-        BeanUtils.copyProperties(this, payed);
-       // payed.publishAfterCommit();
 
-       payed.setOrderId(this.orderId);
-       payed.setTotalPrice(this.totalPrice+this.deliveryFee);
+        if(this.payStatus=="PAYED"){
 
-        System.out.println(" onPostUpdate PUBLISH:  " +payed.toString());
+            Payed payed = new Payed();
+            BeanUtils.copyProperties(this, payed);
+           // payed.publishAfterCommit();
+    
+           payed.setOrderId(this.orderId);
+           payed.setTotalPrice(this.totalPrice+this.deliveryFee);
+    
+            System.out.println(" onPostUpdate PUBLISH:  " +payed.toString());
+    
+            payed.publishAfterCommit();
 
-        payed.publishAfterCommit();
+        }else if(this.payStatus=="PAY CANCELLED"){
+
+            PayCancelled payCancelled = new PayCancelled();
+            BeanUtils.copyProperties(this, payCancelled);
+           // payed.publishAfterCommit();
+    
+           payCancelled.setOrderId(this.orderId);
+
+            System.out.println(" onPostUpdate PUBLISH:  " +payCancelled.toString());
+    
+            payCancelled.publishAfterCommit();
+
+        }
+
+
     }
 
 
