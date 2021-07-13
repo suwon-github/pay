@@ -1,5 +1,30 @@
 # SK Happy Delivery
 
+## 서비스 시나리오
+### SK행복 배달 서비스
+
+### 기능적 요구사항
+
+- 고객이 메뉴를 선택하여 주문한다
+- 고객이 결제한다
+- 주문이 되면 주문 내역이 입점상점주인에게 전달된다
+- 상점주인이 확인하여 주문을 접수하여 조리를 시작한다
+- 고객이 주문을 취소할 수 있다
+- 주문이 취소되면 조리가 취소된다
+- 주문상태가 이벤트 발생시 마다 업데이트 된다
+
+### 비기능적 요구사항
+
+#### 트랜잭션
+- 결제가 되지 않은 주문건은 아예 거래가 성립되지 않아야 한다 Sync 호출
+- 장애격리
+- 상점관리 기능이 수행되지 않더라도 주문은 365일 24시간 받을 수 있어야 한다 Async (event-driven), Eventual Consistency
+- 결제시스템이 과중되면 사용자를 잠시동안 받지 않고 결제를 잠시후에 하도록 유도한다 Circuit breaker, fallback
+#### 성능
+- 고객이 자주 상점관리에서 확인할 수 있는 배달상태를 주문시스템(프론트엔드)에서 확인할 수 있어야 한다 CQRS
+- 주문상태가 바뀔때마다 Front End에 업데이트 할 수 있어야 한다 Event driven
+
+
 ## 1. 분석/설계
 
 ### 이벤트스토밍
@@ -9,34 +34,34 @@
 
 ### 이벤트 도출
 
-![이벤트도출결과](https://user-images.githubusercontent.com/45377807/125230473-ca215d00-e313-11eb-8866-2bdbfd5480be.png)
+<img width="900" alt="이벤트도출" src="https://user-images.githubusercontent.com/45377807/125230473-ca215d00-e313-11eb-8866-2bdbfd5480be.png"><br/>
 
 
 
 
 ### 액터, 커맨드 부착
-![액터 커맨드 부착](https://user-images.githubusercontent.com/45377807/125232032-c3e0b000-e316-11eb-8af4-cf98f7b97dac.png)
+<img width="800" alt="액터 및 커맨드 부착" src="https://user-images.githubusercontent.com/45377807/125232032-c3e0b000-e316-11eb-8af4-cf98f7b97dac.png"><br/>
  
 
 ### 어그리게잇 묶기
-![어그리게잇으로 묶기](https://user-images.githubusercontent.com/45377807/125232099-e7a3f600-e316-11eb-97ae-275b528205bd.png)
+<img width="800" alt="어그리게잇 묶기" src="https://user-images.githubusercontent.com/45377807/125232099-e7a3f600-e316-11eb-97ae-275b528205bd.png"><br/>
 
 
 ### 바운디드 컨텍스트 묶기
-<img width="830" alt="바운디드컨텍스트 묶기" src="https://user-images.githubusercontent.com/45377807/125232137-f7bbd580-e316-11eb-82f0-293cd566faac.png">
+<img width="830" alt="바운디드컨텍스트 묶기" src="https://user-images.githubusercontent.com/45377807/125232137-f7bbd580-e316-11eb-82f0-293cd566faac.png"><br/>
 
 
 ### 폴리시 부착
-<img width="828" alt="폴리시 추가" src="https://user-images.githubusercontent.com/45377807/125232200-16ba6780-e317-11eb-9e1d-db6cce330b92.png">
+<img width="828" alt="폴리시 추가" src="https://user-images.githubusercontent.com/45377807/125232200-16ba6780-e317-11eb-9e1d-db6cce330b92.png"><br/>
 
 
 ### 완성된 모형(실선은 Req/Res, 점선은 Pub/Sub)
-<img width="830" alt="이벤트스토밍 결과" src="https://user-images.githubusercontent.com/45377807/125232289-423d5200-e317-11eb-83e9-f936ad5ea2c4.png">
+<img width="830" alt="이벤트스토밍 결과" src="https://user-images.githubusercontent.com/45377807/125232289-423d5200-e317-11eb-83e9-f936ad5ea2c4.png"><br/>
 
 
 
 ### 헥사고날 아키텍처 다이어그램 도출
-![헥사고날 아키텍쳐 다이어그램](https://user-images.githubusercontent.com/45377807/125297244-08456d80-e362-11eb-9164-e53cbfa52901.png)
+<img width="700" alt="헥사고날 아키텍쳐 다이어그램" src="https://user-images.githubusercontent.com/45377807/125297244-08456d80-e362-11eb-9164-e53cbfa52901.png"><br/>
 
 
 
@@ -45,7 +70,7 @@
 
 분석/설계단계에서 도출된 헥사고날 아키넥처에 따라, 각 바운디트 컨텍스트 별로 대변되는 마이크로 서비스들을 스푸링부트로 구현하였다. 구현한 각 서비스를 로컬에서 실행하는 방법은 아래와 같다
 
-![메이븐 실행](https://user-images.githubusercontent.com/45377807/125234914-96970080-e31c-11eb-933b-7008c23038bf.png)
+<img width="400" alt="메이븐 실행" src="https://user-images.githubusercontent.com/45377807/125234914-96970080-e31c-11eb-933b-7008c23038bf.png"><br/>
 
 
 ### Domain Driven Design의 적용
@@ -120,20 +145,19 @@
 		}
 
 ### 주문 생성
-![오더 증적1](https://user-images.githubusercontent.com/45377807/125314385-1bac0500-e371-11eb-829e-feb8a4158772.png)
-![오더 증적2](https://user-images.githubusercontent.com/45377807/125314416-21094f80-e371-11eb-9243-44502ac1928b.png)
+<img width="800" alt="오더 증적1" src="https://user-images.githubusercontent.com/45377807/125314385-1bac0500-e371-11eb-829e-feb8a4158772.png"><br/>
+<img width="800" alt="오더 증적2" src="https://user-images.githubusercontent.com/45377807/125314416-21094f80-e371-11eb-9243-44502ac1928b.png"><br/>
 ### 오더에 따른 결제 호출(Req/Res)
-![결제 증적1](https://user-images.githubusercontent.com/45377807/125314434-26669a00-e371-11eb-8719-caa3e35fd054.png)
+<img width="800" alt="결제 증적1" src="https://user-images.githubusercontent.com/45377807/125314434-26669a00-e371-11eb-8719-caa3e35fd054.png"><br/>
 ### 결제 후 스토어에서 주문접수
-![스토어오더접수 증적](https://user-images.githubusercontent.com/45377807/125314603-4eee9400-e371-11eb-9aa3-e3484943e402.png)
+<img width="800" alt="스토어오더접수 증적" src="https://user-images.githubusercontent.com/45377807/125314603-4eee9400-e371-11eb-9aa3-e3484943e402.png"><br/>
 ### 고객이 주문취소(주문취소에 따른 스토어의 주문접수 취소)
 #### 오더 정상생성 확인
-![오더취소 증적1](https://user-images.githubusercontent.com/45377807/125314848-865d4080-e371-11eb-97e5-3b713334fef2.png)
-![오더취소 증적2](https://user-images.githubusercontent.com/45377807/125314854-88270400-e371-11eb-90f5-ab4e83a581f2.png)
-#### 생성된 주문이 스토어에서 주문 접수됨을 확인
-![오더취소 증적3](https://user-images.githubusercontent.com/45377807/125314857-89583100-e371-11eb-9418-7278eb213a75.png)
+<img width="800" alt="오더취소 증적1" src="https://user-images.githubusercontent.com/45377807/125314848-865d4080-e371-11eb-97e5-3b713334fef2.png"><br/>
+<img width="800" alt="오더취소 증적2" src="https://user-images.githubusercontent.com/45377807/125314854-88270400-e371-11eb-90f5-ab4e83a581f2.png"><br/>
+<img width="800" alt="오더취소 증적3" src="https://user-images.githubusercontent.com/45377807/125314857-89583100-e371-11eb-9418-7278eb213a75.png"><br/>
 #### 접수된 주문에 대한 주문취소 수행
-![오더취소 증적4](https://user-images.githubusercontent.com/45377807/125314867-8b21f480-e371-11eb-8c27-0980fc7818db.png)
+<img width="800" alt="오더취소 증적4" src="https://user-images.githubusercontent.com/45377807/125314867-8b21f480-e371-11eb-8c27-0980fc7818db.png"><br/>
 
 
 
@@ -232,7 +256,7 @@
 	    }
 
 #### Istio 구현
-<img width="1610" alt="Istio 구현" src="https://user-images.githubusercontent.com/45377807/125317383-ee148b00-e373-11eb-981d-84a7ec4ce2e6.png">
+<img width="1000" alt="Istio 구현" src="https://user-images.githubusercontent.com/45377807/125317383-ee148b00-e373-11eb-981d-84a7ec4ce2e6.png"><br/>
 
 
 ### 이벤트 드리븐 아키텍쳐의 구현 
@@ -296,7 +320,7 @@
 	
 	}
 
-![카프카 실행 증적](https://user-images.githubusercontent.com/45377807/125313408-2ca84680-e370-11eb-8828-40ea04e3240c.png)
+<img width="1000" alt="카프카 실행 증적" src="https://user-images.githubusercontent.com/45377807/125313408-2ca84680-e370-11eb-8828-40ea04e3240c.png"><br/>
 
 
 #### Correlation Key
@@ -347,13 +371,14 @@ OrderService.java
 
 
 ### 적용 후 REST API의 테스트
-![REST API테스트](https://user-images.githubusercontent.com/45377807/125294258-1645bf00-e35f-11eb-896e-31fb17193885.png)
+<img width="300" alt="REST API테스트" src="https://user-images.githubusercontent.com/45377807/125294258-1645bf00-e35f-11eb-896e-31fb17193885.png"><br/>
 
 
 ### Polyglot Programming/Persistence
-#### 
-#### 
-#### 
+ 
+<br/>
+<br/>
+<br/> 
 
 
 
@@ -362,13 +387,13 @@ OrderService.java
 ### SLA 준수
 #### Pod생성 시 Liveness 와 Readiness Probe를 적용했는가?
 #### 셀프힐링: Liveness Probe를 통해 일정 서비스 헬스 상태 저하에 따른 Pod 재생되는지 증명
-<img width="1789" alt="Liveness Probe 수행" src="https://user-images.githubusercontent.com/45377807/125291419-59eaf980-e35c-11eb-90f4-edd1130c04c7.png">
+<img width="1000" alt="Liveness Probe 수행" src="https://user-images.githubusercontent.com/45377807/125291419-59eaf980-e35c-11eb-90f4-edd1130c04c7.png"><br/>
 
 #### 서킷브레이커 설정: 서킷브레이커 적용(상단 Istio 구현 참조)
 
 
 #### 오토스케일러(HPA)
-<img width="962" alt="HPA(Autoscaling)_발췌" src="https://user-images.githubusercontent.com/45377807/125291395-5192be80-e35c-11eb-9a6a-a44c133427c8.png">
+<img width="1000" alt="HPA(Autoscaling)_발췌" src="https://user-images.githubusercontent.com/45377807/125291395-5192be80-e35c-11eb-9a6a-a44c133427c8.png"><br/>
 
 
 #### 모니터링, 앨러팅
@@ -381,11 +406,11 @@ OrderService.java
 
 ##### buildspec-kubectl.yaml 파일
 
-![빌드스펙yaml파일](https://user-images.githubusercontent.com/45377807/125326441-02a95100-e37d-11eb-8db8-1130577a0cff.png)
+<img width="400" alt="빌드스펙yaml파일" src="https://user-images.githubusercontent.com/45377807/125326441-02a95100-e37d-11eb-8db8-1130577a0cff.png"><br/>
 
 ##### 빌드 성공
-![코드빌드1](https://user-images.githubusercontent.com/45377807/125326080-9e868d00-e37c-11eb-9cdb-093edb64efaf.png)
-![코드빌드2](https://user-images.githubusercontent.com/45377807/125326094-a0e8e700-e37c-11eb-8263-0babce52cb25.png)
+<img width="800" alt="코드빌드1" src="https://user-images.githubusercontent.com/45377807/125326080-9e868d00-e37c-11eb-9cdb-093edb64efaf.png"><br/>
+<img width="800" alt="코드빌드2" src="https://user-images.githubusercontent.com/45377807/125326094-a0e8e700-e37c-11eb-8263-0babce52cb25.png"><br/>
 
 
 #### Contract Test
